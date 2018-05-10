@@ -150,11 +150,11 @@ pairwise_dist = pairwise_distances(X=data, metric=jensen_shannon)
 # arbitrary threshold for deciding whether 2 observations are 'similar' or not
 threshold_all = [0.1, 0.11, 0.14, 0.18, 0.19, 0.2, 0.23, 0.25]
 threshold_mark = {str(th):th_mark(th, threshold_all) for th in threshold_all}
-threshold_mark_updated = update_slider_mark(threshold_mark, 15)
+threshold_mark_updated = update_slider_mark(threshold_mark, 12)
 
 relevance_all = [0, 0.25, 0.5, 0.75, 1]
 relevance_mark = {str(th):rel_mark(th, relevance_all) for th in relevance_all}
-relevance_mark_updated = update_slider_mark(relevance_mark, 15)
+relevance_mark_updated = update_slider_mark(relevance_mark, 12)
 
 adjacency = [np.where(pairwise_dist > threshold, 1, 0) for threshold in threshold_all]
 # map threshold value to adjacency matrix
@@ -175,7 +175,7 @@ threshold2k ={
    0.19: 10,
    0.20: 4,
    0.23: 10,
-   0.25: 10
+   0.25: 15
 }
 
 # map threshold values to positions of nodes
@@ -212,8 +212,8 @@ app.layout = html.Div([
         step=None,
         marks=threshold_mark_updated
     ),
-    ], style={'width': '47%','marginBottom': 0, 'marginTop': 0, 'marginLeft':'auto', 'marginRight':'auto',
-              'fontSize':12, 'font-family': 'Arial'}
+    ], style={'width': '47%','marginBottom': 15, 'marginTop': 0, 'marginLeft':'auto', 'marginRight':'auto',
+              'fontSize':10, 'font-family': 'Arial', 'height': 10}
     ),
     html.Div([
     html.H2('Characteristic Words'), 
@@ -225,7 +225,7 @@ app.layout = html.Div([
         step=None,
         marks=relevance_mark_updated
     )], style={'width': '47%','marginBottom': 0, 'marginTop': 50, 'marginLeft':'auto', 'marginRight':'auto',
-              'fontSize':12, 'font-family': 'Arial'})  
+              'fontSize':10, 'font-family': 'Arial'})  
     ])
 
 
@@ -304,19 +304,19 @@ def update_figure(selected_threshold, selected_relevance):
               showticklabels=False,
               title='' 
               )
-    layout=dict(title= 'Network of Topics based on User Reviews',  
-                font= dict(family='Arial', size=17, textposition='center'),
-                            width=1000,
-                            height=800,
+    layout=dict(title= 'Network of Topics Based on User Reviews',  
+                font= dict(family='Arial', size=14, textposition='center'),
+                            width=750,
+                            height=600,
                             autosize=False,
                             showlegend=True,
                             xaxis=axis,
                             yaxis=axis,
                             margin=dict(
-                                l=40,
-                                r=40,
-                                b=10,
-                                t=50,
+                                l=0,
+                                r=0,
+                                b=0,
+                                t=30,
                                 pad=0),
                 hovermode='closest',
                 paper_bgcolor='rgba(0,0,0,0)',
@@ -330,4 +330,4 @@ def update_figure(selected_threshold, selected_relevance):
 
 
 if __name__ == '__main__':
-    app.run_server(port=8051)
+    app.run_server(port=8051, host='0.0.0.0')
