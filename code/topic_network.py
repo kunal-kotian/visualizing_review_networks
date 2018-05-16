@@ -1,19 +1,13 @@
-# import pandas as pd
-import numpy as np
-from scipy.stats import entropy
-from sklearn.metrics.pairwise import pairwise_distances
-import networkx as nx
-
-import plotly.plotly as py
-from plotly.offline import download_plotlyjs, init_notebook_mode,  iplot, plot
-import plotly.graph_objs as go
-import plotly.offline as offline
-
-import dash
-import dash_core_components as dcc
-import dash_html_components as html
+# Create an interactive app to visualize a network of restaurant review topics
+# Kunal Kotian, Sooraj Subrahmannian
+# May 15, 2018
 
 import pickle
+
+from dash import Dash
+from dash.dependencies import Input, Output
+import dash_core_components as dcc
+import dash_html_components as html
 
 
 # Load Data
@@ -49,9 +43,6 @@ def get_relevant_words(vis,lam=0.3,topn=10):
     finalData['words with Relevance']=d.values()
     return finalData
 
-def jensen_shannon(_P, _Q):
-    _M = 0.5 * (_P + _Q)
-    return 0.5 * (entropy(_P, _M) + entropy(_Q, _M))
 
 def get_top_n_words_list(num_topics, vis, lam=0.6, topn=5):
     """returns a sorted list of top n words, where the list follows the order Topic 1, ..., Topic n.
@@ -83,15 +74,6 @@ def th_mark(x, threshold_all):
         return 'High'
     else:
         return ''
-
-def create_graph(adj):
-    # input: adjaccency matrix
-    # returns a graph with the isolates removed
-    G = nx.from_numpy_matrix(adj)
-    isolates = list(nx.isolates(G))
-    G.remove_nodes_from(isolates)
-    return G
-
 
 def update_slider_mark(slider_mark, font_size):
     # update display style of position markers for the slider
@@ -153,10 +135,6 @@ topic_name_mapper = {
 }
 
 
-# Create the Network
-data = df.as_matrix()
-# Pairwise Jensen-Shannon distance between each pair of observations based on the 18 topic-probabilities
-pairwise_dist = pairwise_distances(X=data, metric=jensen_shannon)
 # arbitrary threshold for deciding whether 2 observations are 'similar' or not
 threshold_all = [0.1, 0.11, 0.14, 0.18, 0.19, 0.2, 0.23, 0.25]
 threshold_mark = {str(th):th_mark(th, threshold_all) for th in threshold_all}
@@ -166,33 +144,16 @@ relevance_all = [0, 0.25, 0.5, 0.75, 1]
 relevance_mark = {str(th):rel_mark(th, relevance_all) for th in relevance_all}
 relevance_mark_updated = update_slider_mark(relevance_mark, 15)
 
-adjacency = [np.where(pairwise_dist > threshold, 1, 0) for threshold in threshold_all]
 # map threshold value to adjacency matrix
-thresh_to_adj = {thresh: adj for thresh, adj in zip(threshold_all, adjacency)}
+with open('../data/thresh_to_adj_topics.pkl', 'rb') as f:
+    thresh_to_adj = pickle.load(f)
 # map threshold value to graph
-thresh_to_graph = {thresh: create_graph(adj) for thresh, adj in zip(threshold_all, adjacency)}
+with open('../data/thresh_to_graph_topics.pkl', 'rb') as f:
+    thresh_to_graph = pickle.load(f)
 
-# extract node positions
-fruchterman_k = 5
-fruchterman_iter = 1000
+with open('../data/thresh_to_pos_topics.pkl', 'rb') as f:
+    thresh_to_pos = pickle.load(f)
 
-# predetermined 'k' values for the Fruchterman-Reingold layout
-threshold2k ={
-   0.10: 0.7,
-   0.11: 10,
-   0.14: 0.9,
-   0.18: 20,
-   0.19: 10,
-   0.20: 4,
-   0.23: 10,
-   0.25: 10
-}
-
-# map threshold values to positions of nodes
-thresh_to_pos = {}
-for thresh in thresh_to_graph:
-    graph = nx.fruchterman_reingold_layout(thresh_to_graph[thresh], k = threshold2k[thresh], iterations=fruchterman_iter)
-    thresh_to_pos[thresh] = graph
 
 thresh_to_XnYn = {}
 for thresh in thresh_to_pos:
@@ -204,9 +165,7 @@ for thresh in thresh_to_pos:
 
 
 # Create and run the Dash app
-# get_topic_size_ord(18, topic2tokenpercent)
-
-app = dash.Dash()
+app = Dash()
 server = app.server
 app.layout = html.Div([
     html.Div([
@@ -218,7 +177,7 @@ app.layout = html.Div([
         id='threshold-slider',
         min=min(threshold_all),
         max=max(threshold_all),
-        value=threshold_all[int(np.floor(len(threshold_all)/2))],
+        value=threshold_all[int(len(threshold_all)/2)],
         step=None,
         marks=threshold_mark_updated
     ),
@@ -231,7 +190,7 @@ app.layout = html.Div([
         id='relevance-slider',
         min=min(relevance_all),
         max=max(relevance_all),
-        value=relevance_all[int(np.floor(len(relevance_all)/2))],
+        value=relevance_all[int(len(relevance_all)/2)],
         step=None,
         marks=relevance_mark_updated
     )], style={'width': '47%','marginBottom': 0, 'marginTop': 50, 'marginLeft':'auto', 'marginRight':'auto',
@@ -240,9 +199,9 @@ app.layout = html.Div([
 
 
 @app.callback(
-    dash.dependencies.Output('graph-with-slider', 'figure'),
-    [dash.dependencies.Input('threshold-slider', 'value'), 
-     dash.dependencies.Input('relevance-slider', 'value')])
+    Output('graph-with-slider', 'figure'),
+    [Input('threshold-slider', 'value'), 
+     Input('relevance-slider', 'value')])
 def update_figure(selected_threshold, selected_relevance):
 
     Xn, Yn = thresh_to_XnYn[selected_threshold]
@@ -342,4 +301,4 @@ def update_figure(selected_threshold, selected_relevance):
 
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0',port=8051,debug=True)
+    app.run_server(host='0.0.0.0',port=8051,debug=True,use_reloader=False)
