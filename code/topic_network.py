@@ -1,4 +1,4 @@
-import pandas as pd
+# import pandas as pd
 import numpy as np
 from scipy.stats import entropy
 from sklearn.metrics.pairwise import pairwise_distances
@@ -12,6 +12,20 @@ import plotly.offline as offline
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+
+import pickle
+
+
+# Load Data
+with open('../data/topic2word.pkl', 'rb') as f:
+    df = pickle.load(f)
+df.drop(['Unnamed: 0'], axis=1, inplace=True)
+
+df_null = df.copy()
+df_null.drop(df.columns, inplace=True, axis=1)
+
+with open('../data/vis.pkl', 'rb') as f:
+    vis = pickle.load(f)
 
 
 # Define helper functions
@@ -30,7 +44,7 @@ def get_relevant_words(vis,lam=0.3,topn=10):
             d[k].add(v)
         else:
             d[k].add(v)
-    finalData = pd.DataFrame([],columns=['Topic','words with Relevance'])
+    finalData = df_null
     finalData['Topic']=d.keys()
     finalData['words with Relevance']=d.values()
     return finalData
@@ -55,17 +69,17 @@ def get_top_n_words_list(num_topics, vis, lam=0.6, topn=5):
     return top_topic_words_display
     
 def rel_mark(x, relevance_all):
-    if x==np.min(relevance_all):
+    if x==min(relevance_all):
         return 'Rare'
-    elif x==np.max(relevance_all):
+    elif x==max(relevance_all):
         return 'Frequent'
     else:
         return ''
 
 def th_mark(x, threshold_all):
-    if x==np.min(threshold_all):
+    if x==min(threshold_all):
         return 'Low'
-    elif x==np.max(threshold_all):
+    elif x==max(threshold_all):
         return 'High'
     else:
         return ''
@@ -97,10 +111,6 @@ def get_topic_size_ord(num_topics, topic2tokenpercent):
     topic_size_ord = [topic2tokenpercent[topic_id] for topic_id in topic_ids_ordered]
     return topic_size_ord
 
-# Load Data
-df = pd.read_csv('topic2word.csv')
-df.drop(['Unnamed: 0'], axis=1, inplace=True)
-vis = pd.read_pickle('vis.pkl')
 
 topic2tokenpercent = {'Topic1': 9.1,
                      'Topic2': 4.7,
@@ -194,7 +204,7 @@ for thresh in thresh_to_pos:
 
 
 # Create and run the Dash app
-get_topic_size_ord(18, topic2tokenpercent)
+# get_topic_size_ord(18, topic2tokenpercent)
 
 app = dash.Dash()
 server = app.server
@@ -237,7 +247,9 @@ def update_figure(selected_threshold, selected_relevance):
 
     Xn, Yn = thresh_to_XnYn[selected_threshold]
     
-    node_sizes = np.array(get_topic_size_ord(18, topic2tokenpercent)) * 7
+    # node_sizes = np.array(get_topic_size_ord(18, topic2tokenpercent)) * 7
+    node_sizes = [e * 7 for e in get_topic_size_ord(18, topic2tokenpercent)]
+    
     
     # define a trace for plotly
     trace_nodes0 = dict(type='scatter', 
@@ -330,4 +342,4 @@ def update_figure(selected_threshold, selected_relevance):
 
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0',port=8051,debug=TRUE)
+    app.run_server(host='0.0.0.0',port=8051,debug=True)
