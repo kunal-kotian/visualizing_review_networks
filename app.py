@@ -197,7 +197,7 @@ for thresh in thresh_to_pos:
 get_topic_size_ord(18, topic2tokenpercent)
 
 app = dash.Dash()
-
+server = app.server
 app.layout = html.Div([
     html.Div([
     dcc.Graph(id='graph-with-slider')
@@ -330,4 +330,4 @@ def update_figure(selected_threshold, selected_relevance):
 
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0',port=8051)
+    app.run_server(host='0.0.0.0',port=8051,debug=TRUE)
