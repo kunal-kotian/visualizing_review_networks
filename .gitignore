@@ -1,4 +1,4 @@
-venvfinal
+vizvenv
 *.pyc
 .DS_Store
 .env
