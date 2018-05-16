@@ -405,6 +405,6 @@ for css in external_css:
 
 
 if __name__ == '__main__':
-    app.run_server(port=8052)
+    app.run_server(port=8052,host='0.0.0.0',debug=True)
 
 
