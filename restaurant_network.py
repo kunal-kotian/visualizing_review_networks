@@ -10,13 +10,13 @@ from os import environ
 import pickle
 
 # load required pre-processed data
-with open('../data/df_final_urls_updated.pkl', 'rb') as f:
+with open('./data/df_final_urls_updated.pkl', 'rb') as f:
     df = pickle.load(f)
-with open('../data/thresh_to_graph.pkl','rb') as f:
+with open('./data/thresh_to_graph.pkl','rb') as f:
     thresh_to_graph = pickle.load(f)
-with open('../data/thresh_to_XnYn.pkl','rb') as f:
+with open('./data/thresh_to_XnYn.pkl','rb') as f:
     thresh_to_XnYn = pickle.load(f)
-with open('../data/thresh_to_pos.pkl','rb') as f:
+with open('./data/thresh_to_pos.pkl','rb') as f:
     thresh_to_pos = pickle.load(f)
 
 
