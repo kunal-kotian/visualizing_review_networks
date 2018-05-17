@@ -8,15 +8,6 @@
 		<link rel="stylesheet" href="./review_networks_website_files/main.css">
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
-		<style>
-ul.a {
-    list-style-type: circle;
-}
-
-ul.b {
-    list-style-type: square;
-}
-</style>
 	</head>
 	<body class="">
 		<!-- Wrapper -->
@@ -35,21 +26,21 @@ ul.b {
 							<p>We wanted to experiment with network visualization, particularly in an interactive setting.  We also think topic modeling is fun, and hence decided to take a stab at using topic modeling to construct and visualize two networks.  These networks are driven by reviews of restaurants on Yelp.  We thought it would be interesting to see if something as unstructured as customer opinions would allow us to identify some structure/communities among a network of restaurants and review topics.</p>
 
 							<h2>The Data</h2>
-							<p>We used a <a href="https://www.yelp.com/dataset/challenge">dataset of reviews released by Yelp</a>, filtered it down to restaurants in Las Vegas, with a minimum of 100 reviews each.  This left us with a dataset of reviews from 237 Las Vegas restaurants.  Each review in the filtered dataset was processed using SpaCy and regex (in Python) to get the final <a href="https://spacy.io/usage/spacy-101#annotations-token"> tokenized text</a>.</p>
+							<p>We used a <a href="https://www.yelp.com/dataset/challenge">dataset of reviews released by Yelp</a>, filtered it down to restaurants in Las Vegas, with a minimum of 100 reviews.  This left us with a dataset of reviews from 237 Las Vegas restaurants.  Each review in the filtered dataset was processed using SpaCy and regex (in Python) to get a final set of word tokens.</p>
 
 							<h2>A Network of Restaurants</h2>
-							<p>We trained a Latent Dirichlet Allocation (LDA) model on the tokenized reviews and used it to determine the ‘topic vector’ for each restaurant.  This topic vector is a probability distribution of topics emerging from the reviews.  This can be thought of as a way to represent all reviews for a restaurant with a probability distribution over topics. Using these topic vectors, we calculated the Jensen-Shannon distance between each pair of restaurants.  Note that the Jensen-Shannon distance is simply measures the similarity between two probability distributions.  Finally, we applied a similarity threshold/cutoff to determine which nodes (restaurants) must be linked to form the network.</p>
+							<p>We trained a Latent Dirichlet Allocation (LDA) model on the reviews' text and used it to determine the ‘topic vector’ for each restaurant.  Using this information, we calculated the Jensen-Shannon distance between each pair of restaurants, and then applied a similarity threshold/cutoff to form linkages between the restaurant nodes.</p>
 
 							<h2>A Network of Topics Emerging from Reviews</h2>
-							<p>Each 'topic' is a vector representing the probabilities of different words appearing in that topic.  We obtained a collection of topic vectors for the aggregated Las Vegas restaurants review text corpus.  Once again, we calculated pairwise Jensen-Shannon distances between topics and then applied a similarity cutoff to form linkages between nodes.</p>
+							<p>Using the trained LDA model mentioned above, we obtained a collection of topic vectors for the entire Las Vegas restaurants review text corpus.  We again calculated pairwise Jensen-Shannon distances between topics and then applied a pre-tuned similarity cutoff to form linkages between nodes.</p>
 
-							<h1 align="center">Interactive Network Visualizations</h1>
+							<h1 align="center">The Good Stuff</h1>
 							<h2> Explore a Network of Topics Emerging from Restaurant Reviews </h2>
 							<ul>
-								<li>Nodes (topics) are sized by token contribution.  Token contribution for each topic is the number of word tokens present in a topic divided by the total number of word tokens in the entire text corpus.</li>
-								<li>Similarity cutoff slider allows manipulating the node linkages at different levels of cut-off.  Setting the slider to a low cutoff value makes it 'easy' to link two nodes; setting it to a high value applies a stricter condition for establishing links between nodes.</li>
+								<li>Nodes are sized by token contribution.</li>
+								<li>Threshold slider allows watching the network change.</li>
 								<li>Understand what the topics represent:
-									<ul class="a">
+									<ul>
 										<li>The second slider displays the top ‘characteristic words’ for each topic at dfferent levels of 'relevance'.</li>
 										<li>Move the slider to the left to see characteristic words for a topic that are more closely related to the selected topic, i.e. rare words, almost exlcusively appearing in the selected topic.</li>
 										<li>Move the slider to the right to see words related to the selected topic that are also commonly found in other topics.</li>
@@ -68,7 +59,7 @@ ul.b {
 							</ul>
 						</div>
 					</div>
-					<iframe src="https://restaurantnet.herokuapp.com" width="1200" height="1000" align="center" scrolling="No" frameborder="0"></iframe>
+					<iframe src="http://35.166.120.245:8050/" width="1200" height="1000" align="center" scrolling="No" frameborder="0"></iframe>
 		<!-- Scripts -->
 			<script src="./review_networks_website_files/jquery.min.js"></script>
 			<script src="./review_networks_website_files/skel.min.js"></script>

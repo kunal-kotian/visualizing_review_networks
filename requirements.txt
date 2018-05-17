@@ -6,7 +6,6 @@ dash-core-components==0.22.1
 dash-html-components==0.10.1
 dash-renderer==0.12.1
 decorator==4.3.0
-enum34==1.1.6
 Flask==1.0.2
 Flask-Compress==1.4.0
 gunicorn==19.8.1
@@ -18,7 +17,11 @@ jsonschema==2.6.0
 jupyter-core==4.4.0
 MarkupSafe==1.0
 nbformat==4.4.0
+networkx==2.1
+numpy==1.14.3
+pandas==0.23.0
 plotly==2.6.0
+python-dateutil==2.7.3
 pytz==2018.4
 requests==2.18.4
 six==1.11.0
