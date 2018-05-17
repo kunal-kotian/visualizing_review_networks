@@ -269,7 +269,7 @@ app.layout = html.Div([
         ], className='nine columns', style=dict(textAlign='center')),
     ], className='row' ),
 
-], className='container')
+], className='container', style={'width':'85%', 'marginBottom': 0, 'marginTop': 0, 'marginLeft':'auto', 'marginRight':'auto'})
 
 
 @app.callback(
