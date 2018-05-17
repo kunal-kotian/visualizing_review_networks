@@ -17,14 +17,14 @@ import pickle
 
 
 # Load Data
-with open('../data/topic2word.pkl', 'rb') as f:
+with open('./data/topic2word.pkl', 'rb') as f:
     df = pickle.load(f)
 df.drop(['Unnamed: 0'], axis=1, inplace=True)
 
 df_null = df.copy()
 df_null.drop(df.columns, inplace=True, axis=1)
 
-with open('../data/vis.pkl', 'rb') as f:
+with open('./data/vis.pkl', 'rb') as f:
     vis = pickle.load(f)
 
 
@@ -99,7 +99,7 @@ def update_slider_mark(slider_mark, font_size):
     for position in slider_mark:
         slider_mark_updated[position] = {
             'label': slider_mark[position],
-            'style': {'fontSize':font_size, 'font-family': 'Arial'}
+            'style': {'fontSize':font_size, 'font-family': 'Raleway'}
         }
     return slider_mark_updated
 
@@ -223,7 +223,7 @@ app.layout = html.Div([
         marks=threshold_mark_updated
     ),
     ], style={'width': '47%','marginBottom': 0, 'marginTop': 0, 'marginLeft':'auto', 'marginRight':'auto',
-              'fontSize':12, 'font-family': 'Arial'}
+              'fontSize':12, 'font-family': 'Raleway'}
     ),
     html.Div([
     html.H2('Characteristic Words'), 
@@ -235,7 +235,7 @@ app.layout = html.Div([
         step=None,
         marks=relevance_mark_updated
     )], style={'width': '47%','marginBottom': 0, 'marginTop': 50, 'marginLeft':'auto', 'marginRight':'auto',
-              'fontSize':12, 'font-family': 'Arial'})  
+              'fontSize':12, 'font-family': 'Raleway'})  
     ])
 
 
@@ -317,7 +317,7 @@ def update_figure(selected_threshold, selected_relevance):
               title='' 
               )
     layout=dict(title= 'Network of Topics based on User Reviews',  
-                font= dict(family='Arial', size=17, textposition='center'),
+                font= dict(size=26, textposition='center', family='Raleway'),
                             width=750,
                             height=750,
                             autosize=False,
