@@ -308,8 +308,8 @@ def dfRowFromHover(hoverData,selected_threshold,figure):
 
 
 @app.callback(
-    dash.dependencies.Output('chem_dropdown', 'options'),
-    [dash.dependencies.Input('threshold-slider', 'value')])
+    Output('chem_dropdown', 'options'),
+    [Input('threshold-slider', 'value')])
 def set_dropdown_options(selected_threshold):
     df_for_plot = df.copy()
     df_for_plot = df_for_plot.loc[(df_for_plot.Xn.isnull() == False) & (df_for_plot.Yn.isnull() == False) & (df_for_plot.threshold == selected_threshold), :]
@@ -317,8 +317,8 @@ def set_dropdown_options(selected_threshold):
     return [{'label': i, 'value': i} for i in df_for_plot['NAME'].tolist()]
 
 @app.callback(
-    dash.dependencies.Output('chem_dropdown', 'value'),
-    [dash.dependencies.Input('chem_dropdown', 'options')])
+    Output('chem_dropdown', 'value'),
+    [Input('chem_dropdown', 'options')])
 def set_dropdown_value(available_options):
     return available_options[0]['value']
 
@@ -349,8 +349,8 @@ def return_molecule_name(hoverData,selected_threshold,figure):
 
 
 @app.callback(
-    dash.dependencies.Output('chem_name', 'href'),
-    [dash.dependencies.Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value'),Input('clickable-graph', 'figure')])
+    Output('chem_name', 'href'),
+    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value'),Input('clickable-graph', 'figure')])
 def return_href(hoverData,selected_threshold,figure):
     row = dfRowFromHover(hoverData,selected_threshold,figure)
     if row.empty:
