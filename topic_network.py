@@ -170,7 +170,7 @@ server = app.server
 app.layout = html.Div([
     html.Div([
     dcc.Graph(id='graph-with-slider')
-        ], style={'marginBottom': 0, 'marginTop': 0, 'marginLeft':0, 'marginRight':0}),
+        ], style={'marginLeft':140, 'marginRight':'auto'}),
     html.Div([
     html.H2('Similarity Cutoff'),
     dcc.Slider(
@@ -181,7 +181,7 @@ app.layout = html.Div([
         step=None,
         marks=threshold_mark_updated
     ),
-    ], style={'width': '47%','marginBottom': 0, 'marginTop': 0, 'marginLeft':50, 'marginRight':0,
+    ], style={'width': '47%','marginBottom': 0, 'marginTop': 0, 'marginLeft':'auto', 'marginRight':'auto',
               'fontSize':12, 'font-family': 'Raleway'}
     ),
     html.Div([
@@ -193,9 +193,9 @@ app.layout = html.Div([
         value=relevance_all[int(len(relevance_all)/2)],
         step=None,
         marks=relevance_mark_updated
-    )], style={'width': '47%','marginBottom': 0, 'marginTop': 50, 'marginLeft':50, 'marginRight':0,
+    )], style={'width': '47%','marginBottom': 0, 'marginTop': 50, 'marginLeft':'auto', 'marginRight':'auto',
               'fontSize':12, 'font-family': 'Raleway'})  
-    ], style={'marginBottom': 0, 'marginTop': 0, 'marginLeft':0, 'marginRight':0})
+    ])
 
 
 @app.callback(
