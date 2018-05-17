@@ -281,26 +281,35 @@ def highlight_molecule(chem_dropdown_values, selected_threshold):
 
 
 
-def dfRowFromHover(hoverData,selected_threshold):
+def dfRowFromHover(hoverData,selected_threshold,figure):
     ''' Returns row for hover point as a Pandas Series '''
     if hoverData is not None:
+        print(hoverData)
         if 'points' in hoverData:
             firstPoint = hoverData['points'][0]
-            if 'pointNumber' in firstPoint:
+            if 'x' in firstPoint:
                 point_number = firstPoint['pointNumber']
+                xdata = firstPoint['x']
+                if xdata in figure['data'][0]['x']:
+                    strip_flag = True
+                else:
+                    strip_flag = False
+#                 molecule_name = str(FIGURE['data'][0]['text'][point_number]).strip()
+                # belong to strip 
                 df_for_plot = df.copy()
-                df_for_plot = df_for_plot.loc[(df_for_plot.Xn.isnull() == False) & (df_for_plot.Yn.isnull() == False) & (df_for_plot.threshold == selected_threshold), :]
+                df_for_plot = df_for_plot.loc[(df_for_plot.Xn.isnull() == False) & (df_for_plot.Yn.isnull() == False) & (df_for_plot.threshold == selected_threshold)&(df_for_plot.is_strip==strip_flag), :]
                 df_for_plot = df_for_plot.reset_index().drop('index',axis=1)
-                molecule_name = df_for_plot.loc[point_number,'NAME']
-                return df_for_plot.loc[df_for_plot['NAME'] == molecule_name]
-    # return pd.Series()
-    df_null = df_for_plot.copy()
-    return df_null
+                try:
+                    molecule_name = df_for_plot.loc[point_number,'NAME']
+                    return df_for_plot.loc[df_for_plot['NAME'] == molecule_name]
+                except:
+                    return pd.Series()
+    return pd.Series()
 
 
 @app.callback(
-    Output('chem_dropdown', 'options'),
-    [Input('threshold-slider', 'value')])
+    dash.dependencies.Output('chem_dropdown', 'options'),
+    [dash.dependencies.Input('threshold-slider', 'value')])
 def set_dropdown_options(selected_threshold):
     df_for_plot = df.copy()
     df_for_plot = df_for_plot.loc[(df_for_plot.Xn.isnull() == False) & (df_for_plot.Yn.isnull() == False) & (df_for_plot.threshold == selected_threshold), :]
@@ -308,22 +317,28 @@ def set_dropdown_options(selected_threshold):
     return [{'label': i, 'value': i} for i in df_for_plot['NAME'].tolist()]
 
 @app.callback(
-    Output('chem_dropdown', 'value'),
-    [Input('chem_dropdown', 'options')])
+    dash.dependencies.Output('chem_dropdown', 'value'),
+    [dash.dependencies.Input('chem_dropdown', 'options')])
 def set_dropdown_value(available_options):
     return available_options[0]['value']
 
 @app.callback(
     Output('chem_name', 'children'),
-    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value')])
-def return_molecule_name(hoverData,selected_threshold):
+    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value'),Input('clickable-graph', 'figure')])
+def return_molecule_name(hoverData,selected_threshold,figure):
     if hoverData is not None:
         if 'points' in hoverData:
             firstPoint = hoverData['points'][0]
-            if 'pointNumber' in firstPoint:
+            
+            if 'x' in firstPoint:
                 point_number = firstPoint['pointNumber']
+                xdata = firstPoint['x']
+                if xdata in figure['data'][0]['x']:
+                    strip_flag = True
+                else:
+                    strip_flag = False
                 df_for_plot = df.copy()
-                df_for_plot = df_for_plot.loc[(df_for_plot.Xn.isnull() == False) & (df_for_plot.Yn.isnull() == False) & (df_for_plot.threshold == selected_threshold), :]
+                df_for_plot = df_for_plot.loc[(df_for_plot.Xn.isnull() == False) & (df_for_plot.Yn.isnull() == False) & (df_for_plot.threshold == selected_threshold) & (df_for_plot.is_strip==strip_flag), :]
                 df_for_plot = df_for_plot.reset_index().drop('index',axis=1)
                 try:
                     molecule_name = df_for_plot.loc[point_number,'NAME']
@@ -334,10 +349,10 @@ def return_molecule_name(hoverData,selected_threshold):
 
 
 @app.callback(
-    Output('chem_name', 'href'),
-    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value')])
-def return_href(hoverData,selected_threshold):
-    row = dfRowFromHover(hoverData,selected_threshold)
+    dash.dependencies.Output('chem_name', 'href'),
+    [dash.dependencies.Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value'),Input('clickable-graph', 'figure')])
+def return_href(hoverData,selected_threshold,figure):
+    row = dfRowFromHover(hoverData,selected_threshold,figure)
     if row.empty:
         return
     datasheet_link = row['PAGE'].iloc[0]
@@ -346,9 +361,9 @@ def return_href(hoverData,selected_threshold):
 
 @app.callback(
     Output('chem_img', 'src'),
-    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value')])
-def display_image(hoverData,selected_threshold):
-    row = dfRowFromHover(hoverData,selected_threshold)
+    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value'),Input('clickable-graph', 'figure')])
+def display_image(hoverData,selected_threshold,figure):
+    row = dfRowFromHover(hoverData,selected_threshold,figure)
     if row.empty:
         return
     img_src = row['IMG_URL'].iloc[0]
@@ -356,9 +371,9 @@ def display_image(hoverData,selected_threshold):
 
 @app.callback(
     Output('star_rating', 'children'),
-    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value')])
-def display_star(hoverData,selected_threshold):
-    row = dfRowFromHover(hoverData,selected_threshold)
+    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value'),Input('clickable-graph', 'figure')])
+def display_star(hoverData,selected_threshold,figure):
+    row = dfRowFromHover(hoverData,selected_threshold,figure)
     if row.empty:
         return
     star = row['stars'].iloc[0]
@@ -366,9 +381,9 @@ def display_star(hoverData,selected_threshold):
 
 @app.callback(
     Output('topic1', 'children'),
-    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value')])
-def display_topic1(hoverData,selected_threshold):
-    row = dfRowFromHover(hoverData,selected_threshold)
+    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value'),Input('clickable-graph', 'figure')])
+def display_topic1(hoverData,selected_threshold,figure):
+    row = dfRowFromHover(hoverData,selected_threshold,figure)
     if row.empty:
         return
     topic1 = row['topic1_for_disp'].iloc[0]
@@ -376,9 +391,9 @@ def display_topic1(hoverData,selected_threshold):
 
 @app.callback(
     Output('topic2', 'children'),
-    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value')])
-def display_topic2(hoverData,selected_threshold):
-    row = dfRowFromHover(hoverData,selected_threshold)
+    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value'),Input('clickable-graph', 'figure')])
+def display_topic2(hoverData,selected_threshold,figure):
+    row = dfRowFromHover(hoverData,selected_threshold,figure)
     if row.empty:
         return
     topic2 = row['topic2_for_disp'].iloc[0]
@@ -386,9 +401,9 @@ def display_topic2(hoverData,selected_threshold):
 
 @app.callback(
     Output('topic3', 'children'),
-    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value')])
-def display_topic3(hoverData,selected_threshold):
-    row = dfRowFromHover(hoverData,selected_threshold)
+    [Input('clickable-graph', 'hoverData'),Input('threshold-slider', 'value'),Input('clickable-graph', 'figure')])
+def display_topic3(hoverData,selected_threshold,figure):
+    row = dfRowFromHover(hoverData,selected_threshold,figure)
     if row.empty:
         return
     topic3 = row['topic3_for_disp'].iloc[0]
