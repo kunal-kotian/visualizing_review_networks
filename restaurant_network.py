@@ -346,6 +346,7 @@ def return_molecule_name(hoverData,selected_threshold,figure):
                     return None
     
                 return molecule_name
+    return None
 
 
 @app.callback(
