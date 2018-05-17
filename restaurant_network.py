@@ -246,7 +246,7 @@ app.layout = html.Div([
         html.Br(),
         html.Div([
         html.Div([
-            html.Div('Similarity Cutoff',style=dict( maxHeight='200px', fontSize='20px' )),
+            html.Div(html.B('Similarity Cutoff'),style=dict( maxHeight='200px', fontSize='20px',  marginLeft=-12)),
             dcc.Slider(
                 id='threshold-slider',
                 min=min(threshold_all),
@@ -254,8 +254,8 @@ app.layout = html.Div([
                 value=selected_threshold,
                 step=None,
                 marks=threshold_mark_updated),
-                ], style={'width': '100%','marginBottom': 0, 'marginTop': 0, 'marginLeft':'auto', 'marginRight':'auto',
-                  'fontSize':12, 'font-family': 'Arial'},className='three columns')
+                ], style={'width': '100%','marginBottom': 0, 'marginTop': 0, 'marginLeft':17, 'marginRight':'auto',
+                  'fontSize':12},className='three columns')
     ],className='row')
         
         ], className='three columns', style=dict(height='300px')),
@@ -397,7 +397,7 @@ def display_topic3(hoverData,selected_threshold):
 external_css = ["https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css",
                 "//fonts.googleapis.com/css?family=Raleway:400,300,600",
                 "//fonts.googleapis.com/css?family=Dosis:Medium",
-                "https://cdn.rawgit.com/smsubrahmannian/smsubrahmannian.github.io/a6530a7b/review_networks/custom_container.css"]
+                "https://rawgit.com/smsubrahmannian/smsubrahmannian.github.io/master/review_networks/custom_container.css"]
 
 
 for css in external_css:
