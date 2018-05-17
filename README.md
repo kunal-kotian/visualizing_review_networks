@@ -13,6 +13,10 @@ An explanation of the features of our visualizations is provided at the webpage 
 
 Supporting files related to the webpage are sotred inside the "webpage" directory.
 
+## Video Tutorial on the Interactive Visualizations
+A video explaining the background and motivation behind our project, as well as how to use our interactive visualizations can be found at this url:
+https://youtu.be/hN2LjXEB7wM
+
 ## Code
 The following 2 scripts are required for generating the 2 interactive visualizations:
 * `restaurant_network.py`: Creates an interactive network visualization of restaurants.
