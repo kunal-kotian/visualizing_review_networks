@@ -1,4 +1,4 @@
-# visualizing_review_networks
+# Visualization of Networks Based on Topic Models Using Restaurant Reviews
 
 Project for MSAN Data Visualization Class
 Team: Kunal Kotian and Sooraj Subrahmannian
@@ -8,6 +8,8 @@ Here's an overview of the contents of this repo:
 ## Website
 The website built using the contents of this repo can be accessed here:
 https://smsubrahmannian.github.io/review_networks/
+
+An explanation of the features of our visualizations is provided at the webpage above, along with the visualizations themselves.
 
 Supporting files related to the webpage are sotred inside the "webpage" directory.
 
@@ -26,3 +28,4 @@ Also, the "notebooks" directory includes .ipynb notebooks with some of our exper
 ## Slides
 The slides we used to present this work for the Data Visualization class are located here:
 https://github.com/kunal-kotian/visualizing_review_networks/tree/master/slides
+
