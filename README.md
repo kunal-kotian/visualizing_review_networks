@@ -1,5 +1,8 @@
 # visualizing_review_networks
 
+Project for MSAN Data Visualization Class
+Team: Kunal Kotian and Sooraj Subrahmannian
+
 Here's an overview of the contents of this repo:
 
 ## Website
