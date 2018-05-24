@@ -28,6 +28,7 @@ Also, the "notebooks" directory includes .ipynb notebooks with some of our exper
 
 ## Data
  All data required to generate the visualizations is stored in the "data" directory.
+ The original data source is the Yelp Challeenge (Link: https://www.yelp.com/dataset/documentation/json)
 
 ## Slides
 The slides we used to present this work for the Data Visualization class are located here:
